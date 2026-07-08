@@ -10,5 +10,6 @@ airflow.db-shm
 airflow.db-wal
 airflow.cfg
 webserver_config.py
+simple_auth_manager_passwords.json.generated
 standalone_admin_password.txt
 logs/
