@@ -6,6 +6,8 @@ __pycache__/
 
 # Airflow 실행용 무거운 파일 및 Meta DB 제외
 airflow.db
+airflow.db-shm
+airflow.db-wal
 airflow.cfg
 webserver_config.py
 standalone_admin_password.txt
