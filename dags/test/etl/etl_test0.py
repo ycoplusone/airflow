@@ -3,7 +3,6 @@ import json
 from airflow.decorators import dag, task
 # ⭐️ 우리가 세팅한 MySQL 금고를 자유자재로 다룰 Hook을 가져옵니다.
 from airflow.providers.mysql.hooks.mysql import MySqlHook
-from lib.utilClass import utilCls       # airflow 에 사용되는 각종 유틸들.
 
 import pymysql
 pymysql.install_as_MySQLdb()
