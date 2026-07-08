@@ -5,7 +5,7 @@ __pycache__/
 *.pyc
 
 # Airflow 실행용 무거운 파일 및 Meta DB 제외
-airflow.db*
+airflow.db
 airflow.cfg
 webserver_config.py
 simple_auth_manager_passwords.json.generated
