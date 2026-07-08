@@ -1,0 +1,12 @@
+# Python 가상환경 폴더 제외
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Airflow 실행용 무거운 파일 및 Meta DB 제외
+airflow.db
+airflow.cfg
+webserver_config.py
+standalone_admin_password.txt
+logs/
