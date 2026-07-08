@@ -115,7 +115,7 @@ class utilCls():
         mysql_hook.run(update_sql, parameters=(seoul_now, err_msg ,seq_id))
 
     def getVariable(self):        
-        '''        🎯 데이터를 성공적으로 가져왔습니다!        '''        
+        '''🎯 데이터를 성공적으로 가져왔습니다!'''        
         result = Variable.get(key="variable")
         return result
 
