@@ -114,26 +114,8 @@ class utilCls():
         """
         mysql_hook.run(update_sql, parameters=(seoul_now, err_msg ,seq_id))
 
-    def getVariable(self):
-        
-        '''        🎯 데이터를 성공적으로 가져왔습니다!        '''
-        '''ti      = context['task_instance']        
-        result  = ti.xcom_pull(
-                    #dag_id="etl_variable",
-                    #task_ids="setVariable", 
-                    key="variable",
-                    include_prior_dates=True # 과거 가장 최신 데이터 매칭 옵션
-                )    
-        return result
-        '''
-        '''
-        result = {
-            "this_dt":Variable.get(key="variable_this_dt") ,
-            "pre_dt":Variable.get(key="variable_pre_dt") ,
-            "this_mm":Variable.get(key="variable_this_mm") ,
-            "pre_mm":Variable.get(key="variable_pre_mm") ,
-        }
-        '''
+    def getVariable(self):        
+        '''        🎯 데이터를 성공적으로 가져왔습니다!        '''        
         result = Variable.get(key="variable")
         return result
 
