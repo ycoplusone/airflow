@@ -6,7 +6,7 @@ from datetime import datetime
 '''
 메일 발송 테스트는 개같이 안되네 안해.
 징징징징
-
+왜 또 싱크 안맞아
 '''
 with DAG(dag_id='etl_email', start_date=datetime(2026, 1, 1)) as dag:
     send_email = EmailOperator(
