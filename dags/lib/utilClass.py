@@ -1,7 +1,10 @@
 from datetime import datetime,timedelta
 import logging
+import os
 from airflow.models import Variable
 from airflow.providers.mysql.hooks.mysql import MySqlHook
+from airflow.hooks.base import BaseHook
+import requests
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -119,3 +122,79 @@ class utilCls():
         result = Variable.get(key="variable")
         return result
 
+    def sendEmail(self, connection_id:str = 'smtpGmail', subject:str = '', html_content:str = '', receiver:str = '',file_path:str=''):
+        """
+        Airflow의 SMTP Hook을 사용하여 이메일을 발송합니다.
+        """
+        from email.mime.text import MIMEText
+        from email.mime.base import MIMEBase
+        from email.mime.multipart import MIMEMultipart
+        import smtplib
+        from email import encoders
+
+        # 1. Airflow의 SMTP Hook을 사용하여 연결 설정
+        base_hook = BaseHook.get_connection(connection_id)
+
+        # 3. 이메일 발송
+        # 1. 처음에 완벽히 성공했던 순수 파이썬 smtplib 통신망 개설
+        smtp_host   = base_hook.host
+        smtp_port   = base_hook.port
+        sender      = base_hook.login  # SMTP 연결에서 가져온 발신자 이메일 주소        
+        password    = base_hook.password  # SMTP 연결에서 가져온 비밀번호        
+        
+        
+        msg             = MIMEMultipart()
+        msg['Subject']  = subject
+        msg['From']     = base_hook.login  # SMTP 연결에서 가져온 발신자 이메일 주소
+        msg['To']       = receiver #수신자
+        msg.attach(MIMEText(html_content, 'html', 'utf-8'))
+
+        
+        if os.path.exists(file_path) and file_path != '' :
+            # 파일을 바이너리 읽기(rb) 모드로 엽니다.
+            with open(file_path, 'rb') as f:
+                part = MIMEBase('application', 'octet-stream')
+                part.set_payload(f.read())
+                
+            # 바이너리 데이터를 이메일 전송에 적합하게 인코딩(Base64)합니다.
+            encoders.encode_base64(part)
+            
+            # 파일명을 헤더에 예쁘게 얹어줍니다.
+            filename = os.path.basename(file_path)
+            part.add_header(
+                'Content-Disposition',
+                f'attachment; filename="{filename}"'
+            )
+            
+            # 메일 본체에 첨부파일을 찰떡같이 결합합니다.
+            msg.attach(part)        
+        
+        # 3. 발송        
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(sender, password)
+        server.sendmail(sender, [receiver], msg.as_string())
+        server.quit()        
+
+    
+    def sendTelegram(self , conn_id:str='telegramApi', message_text:str = ''):
+        '''텔레그램 발송'''
+
+        # 1. Airflow Connection 금고에서 telegram_conn 열쇠(토큰)를 가져옵니다.
+        base_hook           = BaseHook.get_connection(conn_id)  # Airflow Connection 금고에서 telegram_conn 열쇠(토큰)를 가져옵니다.
+        bot_token           = base_hook.password  # 금고에 저장한 Password(토큰) 로드
+        chat_id             = base_hook.extra_dejson.get('chat_id')  # 금고에 저장한 Extra(chat_id) 로드
+        
+        # 2. 텔레그램 메시지 발송 API 주소와 데이터 조립
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"        
+        
+        payload = {
+            'chat_id': chat_id,
+            'text': message_text
+        }        
+
+        # 3. 실제 Telegram API 호출
+        res = requests.post(url, json=payload)
+        
+        # 4. 결과 검증 (실패 시 에러를 뿜어서 Airflow 태스크를 실패 처리)
+        return res.status_code
