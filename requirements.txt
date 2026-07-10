@@ -1,0 +1,7 @@
+# 이 파일에 DAG에서 사용할 Python 라이브러리를 추가하세요.
+# 이 라이브러리들은 Docker 이미지 빌드 시 자동으로 설치됩니다.
+
+# 예시 라이브러리:
+apache-airflow-providers-postgres==5.8.0  # PostgreSQL 연동을 위한 Provider
+pandas==2.2.1                           # 데이터 분석 및 처리를 위한 라이브러리
+requests==2.31.0                        # HTTP 요청을 보내기 위한 라이브러리
