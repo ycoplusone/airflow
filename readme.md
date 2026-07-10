@@ -22,6 +22,8 @@ pip install apache-airflow-providers-mysql --no-deps
     - 위 파일 설치에서 오류 발생시 => sudo apt install -y libmysqlclient-dev
 # 5. mysql 클라이언트 설치
 pip install mysqlclient
+# 6. connection http 설치
+pip install apache-airflow-providers-http
 =============================================================    
     
 
