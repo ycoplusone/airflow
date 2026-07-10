@@ -1,0 +1,89 @@
+# Apache Airflow를 위한 Docker Compose 파일
+
+version: '3.8'
+
+# 공통 설정을 위한 앵커(anchor) 정의
+x-airflow-common: &airflow-common
+  # './Dockerfile'을 사용하여 커스텀 이미지를 빌드합니다.
+  build: .
+  # '.env' 파일에서 환경 변수를 로드합니다.
+  env_file:
+    - .env
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./plugins:/opt/airflow/plugins
+    - ./logs:/opt/airflow/logs
+    - ./include:/opt/airflow/include
+  depends_on:
+    - postgres
+
+services:
+  # Airflow 메타데이터 저장을 위한 PostgreSQL 데이터베이스 서비스
+  postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Airflow 웹 UI를 제공하는 서비스
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow-webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  # DAG를 파싱하고 스케줄링하는 서비스
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow-scheduler
+    command: scheduler
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname \"$${HOSTNAME}\""]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  # Deferrable Operator를 위한 Triggerer 서비스 (선택 사항이지만 권장)
+  airflow-triggerer:
+    <<: *airflow-common
+    container_name: airflow-triggerer
+    command: triggerer
+    healthcheck:
+      test: ["CMD-SHELL", "airflow jobs check --job-type TriggererJob --hostname \"$${HOSTNAME}\""]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  # Airflow DB 초기화 및 사용자 생성을 위한 일회성 서비스
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow-init
+    entrypoint: /bin/bash
+    # Airflow 2.3.0 이상에서는 'airflow db init' 대신 'airflow db migrate' 사용을 권장합니다.
+    # 'airflow users create'는 Airflow 2.2.0 이상에서 사용 가능합니다.
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create --username airflow --password airflow --firstname Anonymous --lastname Admin --role Admin --email admin@example.org
+
+volumes:
+  postgres-db-volume:
