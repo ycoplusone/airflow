@@ -65,11 +65,7 @@ export AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
 nohup airflow standalone > airflow_standalone.log 2>&1 &
 ```
 
-## 4. 개발 가이드라인
-
-상세한 DAG 작성 규칙, 환경 분리, 테스트 가이드 등은 GEMINI.md 문서를 참고해 주십시오.
-
-## 5. 개발 일지 및 초기 테스트 결과
+## 4. 개발 일지 및 초기 테스트 결과
 
 - 작업(DAG) 실행 간 몇 초 정도의 지연이 관찰됨. (`poke_interval` 파라미터로 조정 가능성 확인)
 - 기존 상용 ETL 도구와 같이 데이터 처리 파이프라인으로 활용 가능함을 확인함.
@@ -82,6 +78,20 @@ nohup airflow standalone > airflow_standalone.log 2>&1 &
 ## 6. 일자별 작업 내역
 
 *이 섹션에는 각 날짜별 주요 작업 내용, 이슈, 해결 과정 등을 기록합니다.*
+### 2026-07-15
+- **작업:** 
+- **이슈:** 
+- **결과:** 
+
+### 2026-07-14-2
+- **작업:** df_marco_info.py 생성
+- **이슈:** 기존 mysql 5.5 에서 charset(utf8mb4) 차이로 오류 발생
+- **결과:** {"charset": "utf8"} 를 connection 에 추가 함으로써 해소.
+
+### 2026-07-14-1
+- **작업:** mysql to mysql 작업 시작
+- **이슈:** 작업중 실수로 메타데이터 파일을 삭제 하여 이전의 connection 값을 모두 삭제함.
+- **결과:** airflow connections export connections.json 으로 백업수 있는것을 확인.
 
 ### 2026-07-10
 - **작업:** SMTP 메일 발송 테스트
