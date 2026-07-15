@@ -11,7 +11,7 @@ pymysql.install_as_MySQLdb()
 
 class utilCls():
 
-    __MYSQL_CONN_ID = "my_mysql_warehouse"
+    __MYSQL_CONN_ID = "mysql_devDB"
 
     def __init__(self):
         pass
