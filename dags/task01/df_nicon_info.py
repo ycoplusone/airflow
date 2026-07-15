@@ -11,7 +11,7 @@ from airflow import DAG
 from lib.utilClass import utilCls       # airflow 에 사용되는 각종 유틸들.
 
 with DAG(
-    dag_id                  = 'df_marco_info',
+    dag_id                  = 'df_nicon_info',
     default_args            = utilCls().default_args() ,
     schedule                = None,  # 필요시 크론 표현식 주입 (예: '0 3 * * *')
     catchup                 = False,
@@ -36,11 +36,11 @@ with DAG(
             source_conn_id = "mysql_cafe24"         # 👈 데이터를 읽어올 원본 DB Connection
             target_conn_id = "mysql_devDB"          # 👈 데이터를 적재할 대상 DB Connection
 
-            source_table = "marco_info"    # 👈 원본 테이블명
-            target_table = "marco_info"    # 👈 대상 테이블명
+            source_table = "nicon_info"    # 👈 원본 테이블명
+            target_table = "nicon_info"    # 👈 대상 테이블명
 
             # 대상 테이블에 적재할 컬럼 목록 (순서 중요)
-            target_columns = ["seq","job_nm","job_st_dt","job_ed_dt","job_st_cnt","job_ed_cnt","url"]
+            target_columns = ["id","name","amount","refuse","block","c_date","category_id","seq"]
 
             # ======================================================================
             # 2. Extract: 원본 테이블에서 데이터 추출
