@@ -17,12 +17,18 @@ with DAG(
     schedule                = None ,  # 필요시 크론 표현식 주입 (예: '0 3 * * *')
     catchup                 = False ,
     on_failure_callback     = utilCls().on_dag_failure_logging, # ⭐️ 여기에 등록하면 DAG 내 어떤 태스크가 깨져도 에러 로그가 남습니다!
-    tags                    = ['task01', 'jb'] ,
+    tags                    = ['jb'] ,    
 ) as dag:
+    '''
+    cafe24 db 의 가용하는 테이블 oci mysql db 로 이관하는 작업
+    '''
     
     @task
     def task00(**context):
         '''start log'''
+        if not context['dag_run'].conf:
+            context['dag_run'].conf = {}
+        context['dag_run'].conf['p_dag_id'] = 'root'
         seq_id = utilCls().beginLog(context)
         return seq_id    
     
@@ -145,5 +151,5 @@ with DAG(
     #task00() >> task01 >> task02 >> task03 >> task04 >> task05 >> task06 >> task07 >> task08 >> task09 >> task10 >> task11 >> task12 >> task99()
 
     # 병렬 처리 방법
-    task00() >> [task01,task02,task03,task04,task05,task06,task07,task08,task09,task10,task11,task12] >>task99()
+    task00() >> task01 >> [task02,task03,task04,task05,task06,task07,task08,task09,task10,task11,task12] >>task99()
     
