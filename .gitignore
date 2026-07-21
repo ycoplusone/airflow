@@ -15,3 +15,5 @@ logs/
 *.log
 airflow_standalone.log
 *.log
+airflow_standalone.log
+*.log
