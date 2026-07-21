@@ -12,8 +12,8 @@ simple_auth_manager_passwords.json.generated
 standalone_admin_password.txt
 logs/
 
+airflow.db-shm
+airflow.db-wal
+
 *.log
 airflow_standalone.log
-*.log
-airflow_standalone.log
-*.log
