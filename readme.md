@@ -51,7 +51,7 @@ pip install apache-airflow-providers-http
 
 ```bash
 # 가상환경 활성화 및 Airflow 홈 디렉토리 설정
-source venv/bin/activate
+ source ~/airflow_2026/venv/bin/activate
 export AIRFLOW_HOME=~/airflow_2026/airflow_2026
 
 # 인증 없이 API 및 웹서버 접근 허용 (개발용)
