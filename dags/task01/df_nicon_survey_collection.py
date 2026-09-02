@@ -40,7 +40,7 @@ with DAG(
             target_table = "nicon_survey_collection"    # 👈 대상 테이블명
 
             # 대상 테이블에 적재할 컬럼 목록 (순서 중요)
-            target_columns = ["url","collection_dt","description","has_qr","has_text_survey","has_text_satisfaction","is_verified","reg_dt","words","detail_chk","detail_qr","detail_txt"]
+            target_columns = ["url","collection_dt","description","has_qr","has_text_survey","has_text_satisfaction","is_verified","reg_dt","words","detail_chk","detail_qr","detail_txt","detail_ai","detail_comment"]
 
             # ======================================================================
             # 2. Extract: 원본 테이블에서 데이터 추출
